@@ -315,6 +315,8 @@ body {
 .card-content-text {
     margin: auto 0;
     display: block;
+    padding-bottom: 40px;
+    /* Space for gradient so text doesn't overlap */
 }
 
 /* Scroll indicator - subtle fade at bottom when content overflows */
@@ -327,7 +329,6 @@ body {
     height: 40px;
     background: linear-gradient(to bottom, transparent, var(--bg-card));
     pointer-events: none;
-    opacity: 0.8;
 }
 
 .card-content {
@@ -505,9 +506,13 @@ body {
         line-height: 1.35;
     }
 
-    /* Disable scroll fade on mobile - doesn't render smoothly */
+    /* Smaller fade and padding on mobile */
+    .card-content-text {
+        padding-bottom: 30px;
+    }
+
     .card-content.has-overflow::after {
-        display: none;
+        height: 30px;
     }
 
     .card-action {
