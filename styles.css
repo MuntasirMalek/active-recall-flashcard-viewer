@@ -315,19 +315,18 @@ body {
 .card-content-text {
     margin: auto 0;
     display: block;
-    padding-bottom: 40px;
-    /* Space for gradient so text doesn't overlap */
 }
 
-/* Scroll indicator - subtle fade at bottom when content overflows */
+/* Scroll indicator - fade covers FULL line height so no partial text cutoff */
 .card-content.has-overflow::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 40px;
-    background: linear-gradient(to bottom, transparent, var(--bg-card));
+    height: 80px;
+    /* Tall enough to cover entire bottom line */
+    background: linear-gradient(to bottom, transparent, var(--bg-card) 70%);
     pointer-events: none;
 }
 
@@ -506,13 +505,9 @@ body {
         line-height: 1.35;
     }
 
-    /* Smaller fade and padding on mobile */
-    .card-content-text {
-        padding-bottom: 30px;
-    }
-
+    /* Mobile fade - 60px to cover full line */
     .card-content.has-overflow::after {
-        height: 30px;
+        height: 60px;
     }
 
     .card-action {
