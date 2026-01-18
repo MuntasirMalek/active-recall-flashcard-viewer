@@ -449,7 +449,7 @@ body {
     }
 
     .main-content {
-        padding: 0 40px 16px;
+        padding: 0 24px 16px;
         justify-content: center;
         /* CENTER THE CARD VERTICALLY */
     }
@@ -523,11 +523,11 @@ body {
 /* Very small phones */
 @media (max-width: 400px) {
     .main-content {
-        padding: 0 8px 12px;
+        padding: 0 24px 12px;
     }
 
     .card-container {
-        height: 50vh;
+        height: 65vh;
         min-height: 350px;
     }
 
