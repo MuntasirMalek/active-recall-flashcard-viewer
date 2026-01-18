@@ -32,8 +32,8 @@ const demoBtn = document.getElementById('demo-btn');
 // ===== Demo Cards =====
 const DEMO_CARDS = [
     {
-        question: "In cell biology, what is the name of the double-membrane-bound organelle found in most eukaryotic organisms that generates most of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy, and is popularly known as the \"powerhouse of the cell\"?",
-        answer: "Mitochondria"
+        question: "In the field of deep learning, what is the name of the specific neural network architecture introduced in 2017 that relies entirely on a mechanism called \"self-attention\" to weigh the significance of different input data, famously enabling modern Large Language Models?",
+        answer: "The Transformer"
     },
     {
         question: "What does HTML stand for?",
@@ -182,6 +182,21 @@ function updateCard() {
 
     // Update button states
     updateNavigationButtons();
+
+    // Check for overflow after render
+    setTimeout(checkOverflow, 50);
+}
+
+// Check if card content overflows and add indicator class
+function checkOverflow() {
+    const contents = document.querySelectorAll('.card-content');
+    contents.forEach(el => {
+        if (el.scrollHeight > el.clientHeight + 10) {
+            el.classList.add('has-overflow');
+        } else {
+            el.classList.remove('has-overflow');
+        }
+    });
 }
 
 function updateNavigationButtons() {
