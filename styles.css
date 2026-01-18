@@ -505,6 +505,12 @@ body {
         line-height: 1.35;
     }
 
+    /* Smaller, subtler fade on mobile */
+    .card-content.has-overflow::after {
+        height: 30px;
+        opacity: 0.6;
+    }
+
     .card-action {
         font-size: 0.875rem;
         padding-top: 16px;
