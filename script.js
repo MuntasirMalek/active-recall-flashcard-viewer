@@ -413,24 +413,30 @@ prevCard = function () {
 
 // ===== Touch Swipe Support =====
 let touchStartX = 0;
+let touchStartY = 0;
 let touchEndX = 0;
+let touchEndY = 0;
 
 flashcard.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
 }, { passive: true });
 
 flashcard.addEventListener('touchend', (e) => {
     touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
     handleSwipe();
 }, { passive: true });
 
 function handleSwipe() {
     const threshold = 50;
-    const diff = touchStartX - touchEndX;
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
 
-    if (Math.abs(diff) < threshold) return;
+    // Check if horizontal swipe is significant AND dominant (more horizontal than vertical)
+    if (Math.abs(diffX) < threshold || Math.abs(diffX) < Math.abs(diffY)) return;
 
-    if (diff > 0) {
+    if (diffX > 0) {
         // Swipe left - next card
         nextCard();
     } else {
