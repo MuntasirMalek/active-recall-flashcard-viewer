@@ -306,6 +306,16 @@ body {
     line-height: 1.3;
     color: var(--text-card);
     overflow-y: auto;
+    /* Hide scrollbar but keep scrolling */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.card-content::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari, Opera */
 }
 
 .card-action {
