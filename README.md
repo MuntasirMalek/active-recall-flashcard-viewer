@@ -1,10 +1,10 @@
-# Flashcard Viewer 📚
+# Active Recall Flashcard Viewer 📚
 
 A clean, distraction-free flashcard study app inspired by NotebookLM's flashcard interface. Import your own CSV files and study with a beautiful, modern UI.
 
 ## 🚀 Live Demo
 
-**[Try it now on GitHub Pages →](https://MuntasirMalek.github.io/flashcard-viewer/)**
+**[Try it now on GitHub Pages →](https://MuntasirMalek.github.io/active-recall-flashcard-viewer/)**
 
 ## ✨ Features
 
@@ -45,16 +45,16 @@ A clean, distraction-free flashcard study app inspired by NotebookLM's flashcard
 ## 📦 Installation
 
 ### Use Online
-Simply visit the [GitHub Pages link](https://MuntasirMalek.github.io/flashcard-viewer/) and start studying!
+Simply visit the [GitHub Pages link](https://MuntasirMalek.github.io/active-recall-flashcard-viewer/) and start studying!
 
 ### Self-Host
 1. Clone the repository:
    ```bash
-   git clone https://github.com/MuntasirMalek/flashcard-viewer.git
+   git clone https://github.com/MuntasirMalek/active-recall-flashcard-viewer.git
    ```
 2. Open `index.html` in your browser, or serve with any static server:
    ```bash
-   cd flashcard-viewer
+   cd active-recall-flashcard-viewer
    python3 -m http.server 3000
    ```
 3. Open http://localhost:3000
@@ -62,7 +62,7 @@ Simply visit the [GitHub Pages link](https://MuntasirMalek.github.io/flashcard-v
 ## 📁 Project Structure
 
 ```
-flashcard-viewer/
+active-recall-flashcard-viewer/
 ├── index.html      # Main app
 ├── script.js       # Card logic, CSV parsing, navigation
 ├── styles.css      # Styling and animations
