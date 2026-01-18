@@ -66,7 +66,6 @@ flashcard-viewer/
 ├── index.html      # Main app
 ├── script.js       # Card logic, CSV parsing, navigation
 ├── styles.css      # Styling and animations
-├── demo.csv        # Example flashcard deck
 └── README.md       # This file
 ```
 
@@ -88,12 +87,13 @@ What year did WW2 end?,1945
 
 ## 🎯 How It Works
 
-1. **Import** - Drop a CSV file or click to browse
-2. **Study** - Cards appear with question side up
-3. **Flip** - Click/tap or press Space to see the answer
-4. **Navigate** - Use arrows, keyboard, or swipe
-5. **Shuffle** - Randomize order for spaced repetition
-6. **Export** - Save your deck back to CSV
+1. **Try Demo** - Click "Try Demo" to see example cards instantly
+2. **Import** - Drop a CSV file or click to browse
+3. **Study** - Cards appear with question side up
+4. **Flip** - Click/tap or press Space to see the answer
+5. **Navigate** - Use arrows, keyboard, or swipe
+6. **Shuffle** - Randomize order for spaced repetition
+7. **Export** - Save your deck back to CSV
 
 ## 🤝 Contributing
 
