@@ -315,20 +315,20 @@ body {
 .card-content-text {
     margin: auto 0;
     display: block;
-    padding-bottom: 70px;
-    /* Space for gradient - covers 1 full line */
+    padding-bottom: 120px;
+    /* Space for gradient - covers 2 full lines */
 }
 
-/* Scroll indicator - covers full bottom line so no partial word cut-off */
+/* Scroll indicator - covers 2 full lines so nothing peeks below */
 .card-content.has-overflow::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 70px;
-    /* Tall enough for 1 full line of text */
-    background: linear-gradient(to bottom, transparent, var(--bg-card));
+    height: 120px;
+    /* 2 lines worth */
+    background: linear-gradient(to bottom, transparent 0%, var(--bg-card) 60%);
     pointer-events: none;
 }
 
@@ -507,13 +507,13 @@ body {
         line-height: 1.35;
     }
 
-    /* Mobile: 60px gradient covers full line */
+    /* Mobile: 100px gradient covers 2 lines */
     .card-content-text {
-        padding-bottom: 60px;
+        padding-bottom: 100px;
     }
 
     .card-content.has-overflow::after {
-        height: 60px;
+        height: 100px;
     }
 
     .card-action {
