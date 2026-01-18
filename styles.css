@@ -317,18 +317,7 @@ body {
     display: block;
 }
 
-/* Scroll indicator - subtle fade at bottom when content overflows */
-.card-content.has-overflow::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 40px;
-    background: linear-gradient(to bottom, transparent, var(--bg-card));
-    pointer-events: none;
-    opacity: 0.8;
-}
+/* Scroll indicator removed - cleaner without it */
 
 .card-content {
     position: relative;
@@ -503,12 +492,6 @@ body {
     .card-content {
         font-size: 2rem;
         line-height: 1.35;
-    }
-
-    /* Smaller, subtler fade on mobile */
-    .card-content.has-overflow::after {
-        height: 30px;
-        opacity: 0.6;
     }
 
     .card-action {
