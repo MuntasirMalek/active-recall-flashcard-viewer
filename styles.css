@@ -153,6 +153,16 @@ body {
     cursor: pointer;
 }
 
+.btn-icon.active {
+    color: #ea4335;
+    /* Google Red for filter active */
+    background: #fce8e6;
+}
+
+.btn-icon.active svg {
+    fill: #ea4335;
+}
+
 /* ===== Flashcard View ===== */
 .flashcard-view {
     min-height: 100vh;
@@ -292,6 +302,37 @@ body {
 
 .flashcard-back {
     transform: rotateY(180deg);
+}
+
+
+
+/* ===== Favorite Button ===== */
+.fav-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-card-muted);
+    padding: 8px;
+    border-radius: 50%;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.fav-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.fav-btn.active {
+    color: #fbbc04;
+    /* Google Yellow */
+}
+
+.fav-btn.active svg {
+    fill: #fbbc04;
 }
 
 /* ===== Card Text ===== */

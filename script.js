@@ -1,7 +1,10 @@
 // ===== State =====
+let allCards = [];
 let cards = [];
 let currentIndex = 0;
 let isFlipped = false;
+let favorites = new Set(JSON.parse(localStorage.getItem('flashcards_favorites') || '[]'));
+let isFavoritesMode = false;
 
 // ===== DOM Elements =====
 const welcomeScreen = document.getElementById('welcome-screen');
@@ -151,10 +154,11 @@ function handleFile(file) {
             return;
         }
 
-        cards = parsed.map(row => ({
+        allCards = parsed.map(row => ({
             question: row[0],
             answer: row[1]
         }));
+        cards = [...allCards];
 
         currentIndex = 0;
         isFlipped = false;
@@ -182,6 +186,17 @@ function updateCard() {
     const card = cards[currentIndex];
     questionText.textContent = card.question;
     answerText.textContent = card.answer;
+
+    // Update favorite buttons state
+    const isFav = favorites.has(card.question);
+    document.querySelectorAll('.fav-btn').forEach(btn => {
+        btn.classList.toggle('active', isFav);
+        // Prevent flipping when clicking star
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            toggleFavorite(card);
+        };
+    });
 
     // Reset flip state
     isFlipped = false;
@@ -342,7 +357,12 @@ shuffleBtn.addEventListener('click', shuffleCards);
 
 // Demo button
 demoBtn.addEventListener('click', () => {
-    cards = [...DEMO_CARDS];
+    allCards = [...DEMO_CARDS];
+    cards = [...allCards];
+    isFavoritesMode = false;
+    if (document.getElementById('fav-filter-btn')) {
+        document.getElementById('fav-filter-btn').classList.remove('active');
+    }
     currentIndex = 0;
     isFlipped = false;
     showFlashcardView();
@@ -444,6 +464,48 @@ function handleSwipe() {
         prevCard();
     }
 }
+
+// ===== Favorites Logic =====
+function toggleFavorite(card) {
+    if (favorites.has(card.question)) {
+        favorites.delete(card.question);
+        // If we are in favorites mode and untoggle, we might want to refresh? 
+        // For now, let's keep it until mode change or just update UI
+    } else {
+        favorites.add(card.question);
+    }
+    localStorage.setItem('flashcards_favorites', JSON.stringify([...favorites]));
+    updateCard(); // Refresh UI
+}
+
+function toggleFavoriteMode() {
+    isFavoritesMode = !isFavoritesMode;
+
+    if (isFavoritesMode) {
+        const favCards = allCards.filter(c => favorites.has(c.question));
+        if (favCards.length === 0) {
+            alert("No favorites yet! Star some cards first.");
+            isFavoritesMode = false;
+            return; // Don't switch
+        }
+        cards = favCards;
+    } else {
+        cards = [...allCards];
+    }
+
+    updateFavoriteFilterBtn();
+    currentIndex = 0;
+    updateCard();
+}
+
+function updateFavoriteFilterBtn() {
+    const btn = document.getElementById('fav-filter-btn');
+    if (btn) btn.classList.toggle('active', isFavoritesMode);
+}
+
+// Favorites Listener
+const favFilterBtn = document.getElementById('fav-filter-btn');
+if (favFilterBtn) favFilterBtn.addEventListener('click', toggleFavoriteMode);
 
 // ===== Initialize =====
 console.log('Flashcards app loaded. Import a CSV to get started!');

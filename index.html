@@ -53,13 +53,22 @@
         <!-- Header -->
         <header class="header">
             <div class="header-title" id="deck-title">Flashcards</div>
-            <button class="btn-icon" id="import-btn" title="Import CSV">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="17 8 12 3 7 8" />
-                    <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-            </button>
+            <div class="header-controls" style="display: flex; gap: 8px;">
+                <button class="btn-icon" id="fav-filter-btn" title="Show Favorites Only">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                </button>
+                <button class="btn-icon" id="import-btn" title="Import CSV">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                </button>
+            </div>
             <input type="file" id="file-input-header" accept=".csv" hidden>
         </header>
 
@@ -78,11 +87,27 @@
                         <div class="flashcard" id="flashcard">
                             <div class="flashcard-inner">
                                 <div class="flashcard-front">
+                                    <button class="fav-btn" title="Toggle Favorite">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <polygon
+                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                            </polygon>
+                                        </svg>
+                                    </button>
                                     <div class="card-content"><span class="card-content-text" id="question-text"></span>
                                     </div>
                                     <div class="card-action">See answer</div>
                                 </div>
                                 <div class="flashcard-back">
+                                    <button class="fav-btn" title="Toggle Favorite">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2">
+                                            <polygon
+                                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                                            </polygon>
+                                        </svg>
+                                    </button>
                                     <div class="card-content"><span class="card-content-text" id="answer-text"></span>
                                     </div>
                                     <div class="card-action">See question</div>

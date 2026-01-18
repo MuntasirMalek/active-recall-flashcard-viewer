@@ -1,5 +1,5 @@
 // Service Worker for Active Recall Flashcards
-const CACHE_NAME = 'flashcard-viewer-v3';
+const CACHE_NAME = 'flashcard-viewer-v4';
 const ASSETS = [
     './',
     './index.html',
