@@ -240,6 +240,8 @@ body {
 .card-wrapper {
     width: 100%;
     max-width: 420px;
+    position: relative;
+    z-index: 1;
 }
 
 .card-container {
@@ -332,11 +334,20 @@ body {
 }
 
 /* ===== Card Shadow Shelf ===== */
+/* ===== Card Shadow Shelf (Deck Illusion) ===== */
 .card-shadow {
-    height: 20px;
-    margin: 0 24px;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08), transparent);
-    border-radius: 0 0 20px 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(60, 64, 67, 0.4);
+    border-radius: 28px;
+    z-index: -1;
+    transform: translate(12px, 12px);
+    margin: 0;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* ===== Progress Text ===== */
@@ -420,10 +431,7 @@ body {
         font-size: 1.875rem;
     }
 
-    .card-shadow {
-        margin: 0 32px;
-        border-radius: 0 0 28px 28px;
-    }
+
 
     .nav-btn {
         width: 52px;
@@ -500,9 +508,10 @@ body {
     }
 
     .card-shadow {
-        height: 16px;
-        margin: 0 16px;
-        border-radius: 0 0 16px 16px;
+        height: 100%;
+        margin: 0;
+        border-radius: 20px;
+        transform: translate(10px, 10px);
     }
 
     .nav-btn {
@@ -540,9 +549,7 @@ body {
         font-size: 1.75rem;
     }
 
-    .card-shadow {
-        margin: 0 12px;
-    }
+
 
     .nav-btn {
         width: 40px;
