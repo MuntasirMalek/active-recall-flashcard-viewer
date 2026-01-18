@@ -191,8 +191,29 @@ function updateCard() {
 function checkOverflow() {
     const contents = document.querySelectorAll('.card-content');
     contents.forEach(el => {
-        if (el.scrollHeight > el.clientHeight + 10) {
-            el.classList.add('has-overflow');
+        const hasOverflow = el.scrollHeight > el.clientHeight + 10;
+
+        if (hasOverflow) {
+            // Check if scrolled to bottom
+            const isAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
+            if (isAtBottom) {
+                el.classList.remove('has-overflow');
+            } else {
+                el.classList.add('has-overflow');
+            }
+
+            // Add scroll listener if not already added
+            if (!el.dataset.scrollListener) {
+                el.dataset.scrollListener = 'true';
+                el.addEventListener('scroll', () => {
+                    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
+                    if (atBottom) {
+                        el.classList.remove('has-overflow');
+                    } else if (el.scrollHeight > el.clientHeight + 10) {
+                        el.classList.add('has-overflow');
+                    }
+                });
+            }
         } else {
             el.classList.remove('has-overflow');
         }
