@@ -317,21 +317,10 @@ body {
     display: block;
 }
 
-/* Scroll indicator - ellipsis below text, not over it */
-.card-content.has-overflow::after {
-    content: '•••';
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.4);
-    font-size: 1rem;
-    letter-spacing: 4px;
-    pointer-events: none;
-}
-
-.card-content {
-    position: relative;
+/* When there's overflow, clip bottom of content area with a fade */
+.card-content.has-overflow {
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 75%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black 75%, transparent 100%);
 }
 
 .card-action {
