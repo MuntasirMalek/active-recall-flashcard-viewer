@@ -1,10 +1,10 @@
 // ===== State =====
-let allCards = [];
 let cards = [];
 let currentIndex = 0;
 let isFlipped = false;
-let favorites = new Set(JSON.parse(localStorage.getItem('flashcards_favorites') || '[]'));
-let isFavoritesMode = false;
+let favorites = new Set(); // Stores question strings of favorited cards
+let showFavoritesOnly = false; // Filter mode
+let displayCards = []; // Cards currently being displayed (all or favorites)
 
 // ===== DOM Elements =====
 const welcomeScreen = document.getElementById('welcome-screen');
@@ -44,6 +44,11 @@ const totalCardsEl = document.getElementById('total-cards');
 const currentIndexDesktopEl = document.getElementById('current-index-desktop');
 const totalCardsDesktopEl = document.getElementById('total-cards-desktop');
 const demoBtn = document.getElementById('demo-btn');
+
+// Favorites elements
+const favoriteBtnFront = document.getElementById('favorite-btn-front');
+const favoriteBtnBack = document.getElementById('favorite-btn-back');
+const favoritesFilterBtn = document.getElementById('favorites-filter-btn');
 
 // ===== Demo Cards =====
 const DEMO_CARDS = [
@@ -154,14 +159,20 @@ function handleFile(file) {
             return;
         }
 
-        allCards = parsed.map(row => ({
+        cards = parsed.map(row => ({
             question: row[0],
             answer: row[1]
         }));
-        cards = [...allCards];
 
+        loadFavorites();
+        showFavoritesOnly = false;
+        updateDisplayCards();
         currentIndex = 0;
         isFlipped = false;
+
+        if (favoritesFilterBtn) {
+            favoritesFilterBtn.classList.remove('favorites-active');
+        }
 
         showFlashcardView();
         updateCard();
@@ -181,22 +192,11 @@ function showWelcomeScreen() {
 }
 
 function updateCard() {
-    if (cards.length === 0) return;
+    if (displayCards.length === 0) return;
 
-    const card = cards[currentIndex];
+    const card = displayCards[currentIndex];
     questionText.textContent = card.question;
     answerText.textContent = card.answer;
-
-    // Update favorite buttons state
-    const isFav = favorites.has(card.question);
-    document.querySelectorAll('.fav-btn').forEach(btn => {
-        btn.classList.toggle('active', isFav);
-        // Prevent flipping when clicking star
-        btn.onclick = (e) => {
-            e.stopPropagation();
-            toggleFavorite(card);
-        };
-    });
 
     // Reset flip state
     isFlipped = false;
@@ -204,12 +204,13 @@ function updateCard() {
 
     // Update progress (both mobile and desktop)
     currentIndexEl.textContent = currentIndex + 1;
-    totalCardsEl.textContent = cards.length;
+    totalCardsEl.textContent = displayCards.length;
     if (currentIndexDesktopEl) currentIndexDesktopEl.textContent = currentIndex + 1;
-    if (totalCardsDesktopEl) totalCardsDesktopEl.textContent = cards.length;
+    if (totalCardsDesktopEl) totalCardsDesktopEl.textContent = displayCards.length;
 
     // Update button states
     updateNavigationButtons();
+    updateFavoriteButtons();
 
     // Check for overflow after render
     setTimeout(checkOverflow, 50);
@@ -262,32 +263,32 @@ function flipCard() {
 }
 
 function nextCard() {
-    if (cards.length === 0) return;
-    currentIndex = (currentIndex + 1) % cards.length;
+    if (displayCards.length === 0) return;
+    currentIndex = (currentIndex + 1) % displayCards.length;
     updateCard();
 }
 
 function prevCard() {
-    if (cards.length === 0) return;
-    currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+    if (displayCards.length === 0) return;
+    currentIndex = (currentIndex - 1 + displayCards.length) % displayCards.length;
     updateCard();
 }
 
 function shuffleCards() {
-    if (cards.length === 0) return;
+    if (displayCards.length === 0) return;
 
-    const previousCard = cards[currentIndex];
+    const previousCard = displayCards[currentIndex];
 
-    // Fisher-Yates shuffle
-    for (let i = cards.length - 1; i > 0; i--) {
+    // Fisher-Yates shuffle on displayCards
+    for (let i = displayCards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
+        [displayCards[i], displayCards[j]] = [displayCards[j], displayCards[i]];
     }
 
     // UX Improvement: If the new first card is the same as the one user was just looking at,
     // swap it with the last card so the user sees something new immediately.
-    if (cards.length > 1 && cards[0] === previousCard) {
-        [cards[0], cards[cards.length - 1]] = [cards[cards.length - 1], cards[0]];
+    if (displayCards.length > 1 && displayCards[0] === previousCard) {
+        [displayCards[0], displayCards[displayCards.length - 1]] = [displayCards[displayCards.length - 1], displayCards[0]];
     }
 
     currentIndex = 0;
@@ -295,22 +296,112 @@ function shuffleCards() {
 }
 
 function exportCards() {
-    if (cards.length === 0) {
+    if (displayCards.length === 0) {
         alert('No cards to export.');
         return;
     }
 
-    const csv = generateCSV(cards);
+    // Ask for filename (suggest different name if exporting favorites)
+    const defaultName = showFavoritesOnly ? 'favorites' : 'flashcards';
+    let filename = prompt('Enter filename for export:', defaultName);
+    if (filename === null) return; // User cancelled
+    if (!filename.trim()) filename = defaultName;
+    if (!filename.endsWith('.csv')) filename += '.csv';
+
+    const csv = generateCSV(displayCards);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
 
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'flashcards.csv';
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+}
+
+// ===== Favorites =====
+function loadFavorites() {
+    const saved = localStorage.getItem('flashcards_favorites');
+    if (saved) {
+        try {
+            favorites = new Set(JSON.parse(saved));
+        } catch (e) {
+            favorites = new Set();
+        }
+    }
+}
+
+function saveFavorites() {
+    localStorage.setItem('flashcards_favorites', JSON.stringify([...favorites]));
+}
+
+function toggleFavorite(e) {
+    e.stopPropagation(); // Don't flip the card
+    if (displayCards.length === 0) return;
+
+    const card = displayCards[currentIndex];
+    const key = card.question;
+
+    if (favorites.has(key)) {
+        favorites.delete(key);
+    } else {
+        favorites.add(key);
+    }
+
+    saveFavorites();
+    updateFavoriteButtons();
+}
+
+function updateFavoriteButtons() {
+    if (displayCards.length === 0) return;
+
+    const card = displayCards[currentIndex];
+    const isFavorite = favorites.has(card.question);
+
+    if (favoriteBtnFront) {
+        favoriteBtnFront.classList.toggle('active', isFavorite);
+        favoriteBtnFront.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
+    }
+    if (favoriteBtnBack) {
+        favoriteBtnBack.classList.toggle('active', isFavorite);
+        favoriteBtnBack.title = isFavorite ? 'Remove from favorites' : 'Add to favorites';
+    }
+}
+
+function toggleFavoritesFilter() {
+    showFavoritesOnly = !showFavoritesOnly;
+    updateDisplayCards();
+
+    if (favoritesFilterBtn) {
+        favoritesFilterBtn.classList.toggle('favorites-active', showFavoritesOnly);
+        favoritesFilterBtn.title = showFavoritesOnly ? 'Show all cards' : 'Show favorites only';
+    }
+
+    // Toggle background color
+    flashcardView.classList.toggle('favorites-mode', showFavoritesOnly);
+
+    currentIndex = 0;
+    if (displayCards.length === 0 && showFavoritesOnly) {
+        alert('No favorites yet! Star some cards first.');
+        showFavoritesOnly = false;
+        updateDisplayCards();
+        if (favoritesFilterBtn) {
+            favoritesFilterBtn.classList.remove('favorites-active');
+            favoritesFilterBtn.title = 'Show favorites only';
+        }
+        flashcardView.classList.remove('favorites-mode');
+    }
+    updateCard();
+}
+
+function updateDisplayCards() {
+    if (showFavoritesOnly) {
+        displayCards = cards.filter(card => favorites.has(card.question));
+    } else {
+        displayCards = cards;
+    }
 }
 
 // ===== Event Listeners =====
@@ -357,14 +448,17 @@ shuffleBtn.addEventListener('click', shuffleCards);
 
 // Demo button
 demoBtn.addEventListener('click', () => {
-    allCards = [...DEMO_CARDS];
-    cards = [...allCards];
-    isFavoritesMode = false;
-    if (document.getElementById('fav-filter-btn')) {
-        document.getElementById('fav-filter-btn').classList.remove('active');
-    }
+    cards = [...DEMO_CARDS];
+    loadFavorites();
+    showFavoritesOnly = false;
+    updateDisplayCards();
     currentIndex = 0;
     isFlipped = false;
+
+    if (favoritesFilterBtn) {
+        favoritesFilterBtn.classList.remove('favorites-active');
+    }
+
     showFlashcardView();
     updateCard();
 });
@@ -379,6 +473,11 @@ nextBtn.addEventListener('click', nextCard);
 // Navigation (desktop)
 if (prevBtnDesktop) prevBtnDesktop.addEventListener('click', prevCard);
 if (nextBtnDesktop) nextBtnDesktop.addEventListener('click', nextCard);
+
+// Favorites
+if (favoriteBtnFront) favoriteBtnFront.addEventListener('click', toggleFavorite);
+if (favoriteBtnBack) favoriteBtnBack.addEventListener('click', toggleFavorite);
+if (favoritesFilterBtn) favoritesFilterBtn.addEventListener('click', toggleFavoritesFilter);
 
 // Keyboard controls
 document.addEventListener('keydown', (e) => {
@@ -464,48 +563,6 @@ function handleSwipe() {
         prevCard();
     }
 }
-
-// ===== Favorites Logic =====
-function toggleFavorite(card) {
-    if (favorites.has(card.question)) {
-        favorites.delete(card.question);
-        // If we are in favorites mode and untoggle, we might want to refresh? 
-        // For now, let's keep it until mode change or just update UI
-    } else {
-        favorites.add(card.question);
-    }
-    localStorage.setItem('flashcards_favorites', JSON.stringify([...favorites]));
-    updateCard(); // Refresh UI
-}
-
-function toggleFavoriteMode() {
-    isFavoritesMode = !isFavoritesMode;
-
-    if (isFavoritesMode) {
-        const favCards = allCards.filter(c => favorites.has(c.question));
-        if (favCards.length === 0) {
-            alert("No favorites yet! Star some cards first.");
-            isFavoritesMode = false;
-            return; // Don't switch
-        }
-        cards = favCards;
-    } else {
-        cards = [...allCards];
-    }
-
-    updateFavoriteFilterBtn();
-    currentIndex = 0;
-    updateCard();
-}
-
-function updateFavoriteFilterBtn() {
-    const btn = document.getElementById('fav-filter-btn');
-    if (btn) btn.classList.toggle('active', isFavoritesMode);
-}
-
-// Favorites Listener
-const favFilterBtn = document.getElementById('fav-filter-btn');
-if (favFilterBtn) favFilterBtn.addEventListener('click', toggleFavoriteMode);
 
 // ===== Initialize =====
 console.log('Flashcards app loaded. Import a CSV to get started!');
