@@ -261,10 +261,18 @@ function prevCard() {
 function shuffleCards() {
     if (cards.length === 0) return;
 
+    const previousCard = cards[currentIndex];
+
     // Fisher-Yates shuffle
     for (let i = cards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+
+    // UX Improvement: If the new first card is the same as the one user was just looking at,
+    // swap it with the last card so the user sees something new immediately.
+    if (cards.length > 1 && cards[0] === previousCard) {
+        [cards[0], cards[cards.length - 1]] = [cards[cards.length - 1], cards[0]];
     }
 
     currentIndex = 0;
