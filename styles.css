@@ -132,6 +132,18 @@ body {
     color: white;
 }
 
+.btn-demo {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    margin-top: 24px;
+}
+
+.btn-demo:hover {
+    background: var(--accent);
+    color: white;
+}
+
 .btn-icon {
     background: transparent;
     border: none;

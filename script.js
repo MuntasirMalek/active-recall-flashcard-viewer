@@ -27,6 +27,23 @@ const currentIndexEl = document.getElementById('current-index');
 const totalCardsEl = document.getElementById('total-cards');
 const currentIndexDesktopEl = document.getElementById('current-index-desktop');
 const totalCardsDesktopEl = document.getElementById('total-cards-desktop');
+const demoBtn = document.getElementById('demo-btn');
+
+// ===== Demo Cards =====
+const DEMO_CARDS = [
+    {
+        question: "In cell biology, what is the name of the double-membrane-bound organelle found in most eukaryotic organisms that generates most of the cell's supply of adenosine triphosphate (ATP), used as a source of chemical energy, and is popularly known as the \"powerhouse of the cell\"?",
+        answer: "Mitochondria"
+    },
+    {
+        question: "What does HTML stand for?",
+        answer: "HyperText Markup Language"
+    },
+    {
+        question: "Who wrote Romeo and Juliet?",
+        answer: "William Shakespeare"
+    }
+];
 
 // ===== CSV Parser =====
 function parseCSV(text) {
@@ -265,6 +282,15 @@ fileInputHeader.addEventListener('change', (e) => {
 
 exportBtn.addEventListener('click', exportCards);
 shuffleBtn.addEventListener('click', shuffleCards);
+
+// Demo button
+demoBtn.addEventListener('click', () => {
+    cards = [...DEMO_CARDS];
+    currentIndex = 0;
+    isFlipped = false;
+    showFlashcardView();
+    updateCard();
+});
 
 // Card flip
 flashcard.addEventListener('click', flipCard);
