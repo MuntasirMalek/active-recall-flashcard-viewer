@@ -90,6 +90,7 @@ function parseCSV(text) {
                 i++;
             } else {
                 inQuotes = !inQuotes;
+                current += char;  // FIX: Include the quote character!
             }
         } else if ((char === '\n' || char === '\r') && !inQuotes) {
             if (current.trim()) {
@@ -108,7 +109,7 @@ function parseCSV(text) {
         lines.push(current);
     }
 
-    return lines.map(line => {
+    return lines.map((line, lineIndex) => {
         const result = [];
         let field = '';
         let inFieldQuotes = false;
@@ -133,6 +134,7 @@ function parseCSV(text) {
         }
 
         result.push(field.trim());
+
         return result;
     }).filter(row => row.length >= 2 && row[0] && row[1]);
 }
@@ -252,13 +254,52 @@ function showWelcomeScreen() {
 function updateCard() {
     if (displayCards.length === 0) return;
 
-    const card = displayCards[currentIndex];
-    questionText.textContent = card.question;
-    answerText.textContent = card.answer;
-
-    // Reset flip state
+    // Reset flip state INSTANTLY (no animation) to avoid showing next answer
+    const flashcardInner = flashcard.querySelector('.flashcard-inner');
+    if (isFlipped) {
+        // Hide card during reset to prevent visual glitch
+        flashcardInner.style.visibility = 'hidden';
+        // Temporarily disable transition for instant flip back
+        flashcardInner.style.transition = 'none';
+        flashcard.classList.remove('flipped');
+        // Force reflow to apply the change immediately
+        flashcardInner.offsetHeight;
+        // Re-enable transition and show card
+        flashcardInner.style.transition = '';
+        flashcardInner.style.visibility = '';
+    }
     isFlipped = false;
-    flashcard.classList.remove('flipped');
+
+    const card = displayCards[currentIndex];
+
+    // Escape HTML but preserve LaTeX delimiters
+    const escapeHtml = (text) => {
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    };
+
+    // Set as innerHTML with HTML-escaped content (LaTeX $ and \ are preserved)
+    questionText.innerHTML = escapeHtml(card.question);
+    answerText.innerHTML = escapeHtml(card.answer);
+
+    // Render LaTeX math formulas using KaTeX
+    if (typeof renderMathInElement !== 'undefined') {
+        const katexOptions = {
+            delimiters: [
+                { left: '$$', right: '$$', display: true },
+                { left: '$', right: '$', display: false },
+                { left: '\\(', right: '\\)', display: false },
+                { left: '\\[', right: '\\]', display: true }
+            ],
+            throwOnError: false
+        };
+
+        // Render only on the current card's text elements
+        renderMathInElement(questionText, katexOptions);
+        renderMathInElement(answerText, katexOptions);
+    }
 
     // Update progress (both mobile and desktop)
     currentIndexEl.textContent = currentIndex + 1;
@@ -458,7 +499,7 @@ function updateDisplayCards() {
     if (showFavoritesOnly) {
         displayCards = cards.filter(card => favorites.has(card.question));
     } else {
-        displayCards = cards;
+        displayCards = [...cards]; // Create a copy to allow proper shuffling
     }
 }
 

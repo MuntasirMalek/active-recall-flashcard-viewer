@@ -285,12 +285,40 @@ body {
     display: flex;
     flex-direction: column;
     padding: 40px 32px;
+    overflow: visible;
+    /* Prevent border-radius clipping */
     /* SHADOW like NotebookLM */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .flashcard-back {
     transform: rotateY(180deg);
+    background: #ffffff;
+}
+
+.flashcard-back .card-content {
+    color: #1a1a1a;
+    /* Black text */
+}
+
+.flashcard-back .card-action {
+    display: none;
+    /* Hide 'See question' on answer card */
+}
+
+.flashcard-back .favorite-btn {
+    background: rgba(0, 0, 0, 0.08);
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.flashcard-back .favorite-btn:hover {
+    background: rgba(0, 0, 0, 0.12);
+    color: #f87171;
+}
+
+.flashcard-back .favorite-btn.active {
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
 }
 
 /* ===== Card Text ===== */
@@ -298,14 +326,19 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    font-size: 2.25rem;
+    font-size: 2.8125rem;
+    /* Increased by 25% from 2.25rem */
     font-weight: 600;
     line-height: 1.3;
     color: var(--text-card);
     overflow-y: auto;
+    overflow-x: auto;
+    /* Allow horizontal scroll for wide math content */
     /* Hide scrollbar but keep scrolling */
     scrollbar-width: none;
     -ms-overflow-style: none;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .card-content::-webkit-scrollbar {
@@ -316,6 +349,35 @@ body {
 .card-content-text {
     margin: auto 0;
     display: block;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* KaTeX math styling - make it fit and wrap */
+.card-content .katex {
+    display: inline;
+    white-space: normal !important;
+}
+
+.card-content .katex-mathml {
+    display: none;
+    /* Hide the MathML duplicate */
+}
+
+.card-content .katex-html {
+    white-space: normal !important;
+    word-break: break-word;
+}
+
+.card-content .katex-html>.base {
+    display: inline;
+    white-space: normal !important;
+}
+
+.card-content .katex-display {
+    margin: 0.5em 0;
+    overflow-x: auto;
 }
 
 /* When there's overflow, clip bottom of content area with a fade */
@@ -480,7 +542,8 @@ body {
     }
 
     .card-content {
-        font-size: 1.875rem;
+        font-size: 2.34rem;
+        /* Increased by 25% from 1.875rem */
     }
 
 
@@ -550,7 +613,8 @@ body {
     }
 
     .card-content {
-        font-size: 2rem;
+        font-size: 2.5rem;
+        /* Increased by 25% from 2rem */
         line-height: 1.35;
     }
 
@@ -598,7 +662,8 @@ body {
     }
 
     .card-content {
-        font-size: 1.75rem;
+        font-size: 2.1875rem;
+        /* Increased by 25% from 1.75rem */
     }
 
 

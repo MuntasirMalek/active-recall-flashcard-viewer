@@ -8,6 +8,12 @@ A clean, distraction-free flashcard study app inspired by NotebookLM's flashcard
 
 ## ✨ Features
 
+- **📐 LaTeX Math Support:**
+  - Render math formulas using KaTeX
+  - Inline math with `$...$` or `\(...\)`
+  - Display math with `$$...$$` or `\[...\]`
+  - Great for chemistry and math flashcards
+
 - **📱 Installable PWA:**
   - Install on Chrome/Android as a standalone app
   - Works offline once installed
@@ -52,7 +58,8 @@ A clean, distraction-free flashcard study app inspired by NotebookLM's flashcard
 ## 🛠️ Tech Stack
 
 - Vanilla HTML, CSS, JavaScript
-- No frameworks or dependencies
+- KaTeX for LaTeX math rendering
+- No other frameworks or dependencies
 - Progressive Web App (PWA) with Service Worker
 - LocalStorage for favorites persistence
 - Relative paths for easy deployment
