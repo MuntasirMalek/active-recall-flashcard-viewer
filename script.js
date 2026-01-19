@@ -45,6 +45,14 @@ const currentIndexDesktopEl = document.getElementById('current-index-desktop');
 const totalCardsDesktopEl = document.getElementById('total-cards-desktop');
 const demoBtn = document.getElementById('demo-btn');
 
+// Paste modal elements
+const pasteBtn = document.getElementById('paste-btn');
+const pasteModal = document.getElementById('paste-modal');
+const pasteTextarea = document.getElementById('paste-textarea');
+const modalCancelBtn = document.getElementById('modal-cancel-btn');
+const modalLoadBtn = document.getElementById('modal-load-btn');
+const modalBackdrop = pasteModal ? pasteModal.querySelector('.modal-backdrop') : null;
+
 // Favorites elements
 const favoriteBtnFront = document.getElementById('favorite-btn-front');
 const favoriteBtnBack = document.getElementById('favorite-btn-back');
@@ -178,6 +186,56 @@ function handleFile(file) {
         updateCard();
     };
     reader.readAsText(file);
+}
+
+// ===== Paste Modal Functions =====
+function openPasteModal() {
+    if (pasteModal) {
+        pasteModal.classList.remove('hidden');
+        pasteTextarea.value = '';
+        pasteTextarea.focus();
+    }
+}
+
+function closePasteModal() {
+    if (pasteModal) {
+        pasteModal.classList.add('hidden');
+    }
+}
+
+function handlePastedText() {
+    const text = pasteTextarea.value.trim();
+
+    if (!text) {
+        alert('Please paste some flashcard content.');
+        return;
+    }
+
+    const parsed = parseCSV(text);
+
+    if (parsed.length === 0) {
+        alert('No valid flashcards found. Make sure each line has: Question,Answer');
+        return;
+    }
+
+    cards = parsed.map(row => ({
+        question: row[0],
+        answer: row[1]
+    }));
+
+    loadFavorites();
+    showFavoritesOnly = false;
+    updateDisplayCards();
+    currentIndex = 0;
+    isFlipped = false;
+
+    if (favoritesFilterBtn) {
+        favoritesFilterBtn.classList.remove('favorites-active');
+    }
+
+    closePasteModal();
+    showFlashcardView();
+    updateCard();
 }
 
 // ===== UI Updates =====
@@ -462,6 +520,12 @@ demoBtn.addEventListener('click', () => {
     showFlashcardView();
     updateCard();
 });
+
+// Paste modal
+if (pasteBtn) pasteBtn.addEventListener('click', openPasteModal);
+if (modalCancelBtn) modalCancelBtn.addEventListener('click', closePasteModal);
+if (modalLoadBtn) modalLoadBtn.addEventListener('click', handlePastedText);
+if (modalBackdrop) modalBackdrop.addEventListener('click', closePasteModal);
 
 // Card flip
 flashcard.addEventListener('click', flipCard);

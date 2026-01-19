@@ -44,7 +44,24 @@
                 <p>CSV format: <code>Question,Answer</code></p>
             </div>
 
-            <button class="btn btn-demo" id="demo-btn">Try Demo</button>
+            <div class="welcome-buttons">
+                <button class="btn btn-secondary" id="paste-btn">Paste Text</button>
+                <button class="btn btn-demo" id="demo-btn">Try Demo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paste Text Modal -->
+    <div id="paste-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <h2 class="modal-title">Paste Flashcards</h2>
+            <p class="modal-hint">Format: <code>Question,Answer</code> (one per line)</p>
+            <textarea id="paste-textarea" placeholder="What is 2+2?,4&#10;Capital of France?,Paris&#10;Who wrote Hamlet?,Shakespeare"></textarea>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+                <button class="btn btn-primary" id="modal-load-btn">Load Cards</button>
+            </div>
         </div>
     </div>
 
